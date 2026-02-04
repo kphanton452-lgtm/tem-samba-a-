@@ -1,14 +1,30 @@
 
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
+
+/**
+ * Obtém a chave de API de forma segura em diferentes ambientes.
+ */
+function getApiKey() {
+  try {
+    if (typeof process !== 'undefined' && process.env?.API_KEY) {
+      return process.env.API_KEY;
+    }
+    // @ts-ignore
+    if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GEMINI_API_KEY) {
+      // @ts-ignore
+      return import.meta.env.VITE_GEMINI_API_KEY;
+    }
+  } catch (e) {}
+  return "";
+}
 
 /**
  * Analisa conteúdo de textos brutos ou URLs usando Gemini 3.
  */
 export async function parseContentWithAI(rawText: string, type: 'event' | 'video' | 'article') {
-  // Inicialização local para evitar erro de 'process' no topo do arquivo
-  const apiKey = (typeof process !== 'undefined' && process.env?.API_KEY) || "";
+  const apiKey = getApiKey();
   if (!apiKey) {
-    console.error("Gemini API Key não encontrada em process.env.API_KEY");
+    console.error("Gemini API Key não encontrada. Configure a variável de ambiente API_KEY.");
     return null;
   }
   
@@ -62,7 +78,7 @@ export async function parseContentWithAI(rawText: string, type: 'event' | 'video
  * Revisa textos mantendo a identidade cultural afro-brasileira.
  */
 export async function reviseContentWithAI(text: string) {
-  const apiKey = (typeof process !== 'undefined' && process.env?.API_KEY) || "";
+  const apiKey = getApiKey();
   if (!apiKey) return null;
 
   const ai = new GoogleGenAI({ apiKey });

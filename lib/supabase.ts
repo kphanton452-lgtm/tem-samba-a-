@@ -33,9 +33,9 @@ const getEnv = (key: string): string | undefined => {
 const supabaseUrl = getEnv('VITE_SUPABASE_URL');
 const supabaseAnonKey = getEnv('VITE_SUPABASE_ANON_KEY');
 
+// Corrigido: usando optional chaining (?.) para evitar crash se supabaseUrl for undefined
 export const IS_SUPABASE_CONFIGURED = !!(
-  supabaseUrl && 
-  supabaseUrl.startsWith('http') && 
+  supabaseUrl?.startsWith('http') && 
   supabaseAnonKey && 
   supabaseAnonKey.length > 20
 );
@@ -43,12 +43,13 @@ export const IS_SUPABASE_CONFIGURED = !!(
 if (!IS_SUPABASE_CONFIGURED && typeof window !== 'undefined') {
   console.warn(
     'Supabase: Chaves de API não configuradas ou inválidas. O site está operando em MODO DEMO.\n' +
-    'Verifique as variáveis VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.'
+    'Verifique as variáveis VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no painel da Vercel.'
   );
 }
 
+// Inicializa o cliente com URLs seguras para evitar erro de 'invalid URL' que causa tela preta
 export const supabase = createClient(
-  IS_SUPABASE_CONFIGURED ? supabaseUrl! : 'https://dummy-url.supabase.co', 
+  IS_SUPABASE_CONFIGURED ? supabaseUrl! : 'https://dummy-project.supabase.co', 
   IS_SUPABASE_CONFIGURED ? supabaseAnonKey! : 'dummy-key',
   {
     auth: {
