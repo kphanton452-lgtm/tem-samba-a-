@@ -69,7 +69,7 @@ const WatchSection: React.FC<{ onViewAll: () => void }> = ({ onViewAll }) => {
               {isDirectVideo(selectedVideo.video_url) ? (
                 <video 
                   src={selectedVideo.video_url} 
-                  poster={selectedVideo.thumbnail}
+                  poster={selectedVideo.thumbnail || selectedVideo.image_url}
                   className="w-full h-full object-contain" 
                   controls 
                   autoPlay
@@ -80,7 +80,7 @@ const WatchSection: React.FC<{ onViewAll: () => void }> = ({ onViewAll }) => {
                   className="w-full h-full" 
                   allow="autoplay; encrypted-media; picture-in-picture" 
                   allowFullScreen
-                  title="Video Player"
+                  title={selectedVideo.title}
                 ></iframe>
               )}
             </div>
@@ -95,7 +95,7 @@ const WatchSection: React.FC<{ onViewAll: () => void }> = ({ onViewAll }) => {
               </div>
               
               <h3 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-none">
-                {selectedVideo.title}
+                {selectedVideo.title || 'Título indisponível'}
               </h3>
               
               <p className="text-white/50 text-base md:text-xl font-light leading-relaxed max-w-4xl">
@@ -127,7 +127,7 @@ const WatchSection: React.FC<{ onViewAll: () => void }> = ({ onViewAll }) => {
         ) : videos.length > 0 ? (
           <>
             <div onClick={() => setSelectedVideo(videos[0])} className="cursor-pointer md:col-span-2 md:row-span-2 relative group overflow-hidden rounded-[2.5rem] bg-card-dark border border-white/5 shadow-2xl">
-              <img src={videos[0].thumbnail} className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-1000 group-hover:scale-105" alt={videos[0].title} />
+              <img src={videos[0].thumbnail || videos[0].image_url} className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-1000 group-hover:scale-105" alt={videos[0].title} />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-[2px]">
                 <div className="bg-primary text-white p-8 rounded-full shadow-2xl scale-75 group-hover:scale-100 transition-all duration-500">
@@ -142,7 +142,7 @@ const WatchSection: React.FC<{ onViewAll: () => void }> = ({ onViewAll }) => {
 
             {videos.slice(1).map(video => (
               <div key={video.id} onClick={() => setSelectedVideo(video)} className="cursor-pointer relative group overflow-hidden rounded-[2.5rem] bg-card-dark border border-white/5 hover:border-primary/30 transition-all">
-                <img src={video.thumbnail} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-all" alt={video.title} />
+                <img src={video.thumbnail || video.image_url} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-all" alt={video.title} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
                 <div className="absolute bottom-0 p-8">
                   <span className="text-primary text-[10px] font-black uppercase mb-1 block tracking-widest">{video.category}</span>

@@ -114,6 +114,14 @@
             background-size: 20px 20px;
             opacity: 0.1;
         }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(184, 135, 0, 0.3);
+            border-radius: 10px;
+        }
     </style>
 <script type="importmap">
 {
@@ -129,5 +137,6 @@
 </head>
 <body class="antialiased selection:bg-primary selection:text-white">
     <div id="root"></div>
+    <script type="module" src="index.tsx"></script>
 </body>
 </html>

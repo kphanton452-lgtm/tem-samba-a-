@@ -1,10 +1,18 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 
 /**
  * Analisa conteúdo de textos brutos ou URLs usando Gemini 3.
  */
 export async function parseContentWithAI(rawText: string, type: 'event' | 'video' | 'article') {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  // Inicialização local para evitar erro de 'process' no topo do arquivo
+  const apiKey = (typeof process !== 'undefined' && process.env?.API_KEY) || "";
+  if (!apiKey) {
+    console.error("Gemini API Key não encontrada em process.env.API_KEY");
+    return null;
+  }
+  
+  const ai = new GoogleGenAI({ apiKey });
   const model = 'gemini-3-flash-preview';
   const isUrl = rawText.trim().startsWith('http');
   
@@ -52,10 +60,12 @@ export async function parseContentWithAI(rawText: string, type: 'event' | 'video
 
 /**
  * Revisa textos mantendo a identidade cultural afro-brasileira.
- * Atua como editor cultural para preservar termos ancestrais e melhorar a clareza.
  */
 export async function reviseContentWithAI(text: string) {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = (typeof process !== 'undefined' && process.env?.API_KEY) || "";
+  if (!apiKey) return null;
+
+  const ai = new GoogleGenAI({ apiKey });
   const model = 'gemini-3-flash-preview';
 
   const systemInstruction = `Você é um editor de conteúdo cultural afro-brasileiro especializado em Samba e tradições de matriz africana. 
