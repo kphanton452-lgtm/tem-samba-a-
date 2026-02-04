@@ -8,9 +8,10 @@ const LOGO_URL = "https://ifnzywenpohlmwznadke.supabase.co/storage/v1/object/pub
 const VideoGallery: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const [activeCategory, setActiveCategory] = useState('Todos');
   const [selectedVideo, setSelectedVideo] = useState<VideoData | null>(null);
-  const videos = SITE_CONTENT.videos;
+  const videos = SITE_CONTENT.videos || [];
 
   const getYouTubeId = (url: string) => {
+    if (!url) return null;
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
     const match = url.match(regExp);
     return (match && match[2].length === 11) ? match[2] : null;
@@ -18,15 +19,12 @@ const VideoGallery: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
   const getEmbedUrl = (url: string) => {
     const ytId = getYouTubeId(url);
-    if (ytId) return `https://www.youtube.com/embed/${ytId}`;
-    if (url.includes('vimeo.com/')) {
-      const vimeoId = url.split('/').pop();
-      return `https://player.vimeo.com/video/${vimeoId}`;
-    }
+    if (ytId) return `https://www.youtube.com/embed/${ytId}?autoplay=1`;
     return url;
   };
 
   const isDirectVideo = (url: string) => {
+    if (!url) return false;
     const lowerUrl = url.toLowerCase();
     return lowerUrl.endsWith('.mp4') || lowerUrl.endsWith('.webm') || lowerUrl.endsWith('.ogg');
   };
@@ -58,7 +56,7 @@ const VideoGallery: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 ></video>
               ) : (
                 <iframe 
-                  src={`${getEmbedUrl(selectedVideo.video_url)}?autoplay=1`} 
+                  src={getEmbedUrl(selectedVideo.video_url)} 
                   className="w-full h-full" 
                   allow="autoplay; encrypted-media" 
                   allowFullScreen
@@ -70,7 +68,7 @@ const VideoGallery: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <div className="p-8 md:p-14 space-y-8 bg-gradient-to-b from-card-dark to-black overflow-y-auto max-h-[45vh]">
               <div className="flex flex-wrap items-center gap-4">
                 <span className="bg-primary text-white text-[10px] font-black px-5 py-2 rounded-full uppercase tracking-[0.2em] shadow-lg shadow-primary/20">
-                  {selectedVideo.category}
+                  {selectedVideo.category || 'VÍDEO'}
                 </span>
                 <div className="flex-1 h-px bg-white/5"></div>
               </div>
@@ -79,13 +77,11 @@ const VideoGallery: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 {selectedVideo.title}
               </h2>
               
-              {selectedVideo.description && (
-                <div className="border-l-4 border-primary/40 pl-8">
-                  <p className="text-white/50 text-xl md:text-2xl font-light leading-relaxed max-w-4xl">
-                    {selectedVideo.description}
-                  </p>
-                </div>
-              )}
+              <div className="border-l-4 border-primary/40 pl-8">
+                <p className="text-white/50 text-xl md:text-2xl font-light leading-relaxed max-w-4xl">
+                  {selectedVideo.description || 'Este vídeo faz parte do nosso acervo cultural.'}
+                </p>
+              </div>
               
               <div className="pt-10 border-t border-white/5 flex items-center justify-between">
                 <div className="max-w-xs w-full">
@@ -151,11 +147,9 @@ const VideoGallery: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 {video.title}
               </h3>
               
-              {video.description && (
-                <p className="text-white/40 text-[13px] font-light leading-relaxed line-clamp-2">
-                  {video.description}
-                </p>
-              )}
+              <p className="text-white/40 text-[13px] font-light leading-relaxed line-clamp-2">
+                {video.description || 'Acompanhe as raízes do samba através das nossas lentes.'}
+              </p>
               
               <div className="pt-6 border-t border-white/5">
                 <SocialActions contentId={`video-${video.id}`} />

@@ -33,6 +33,7 @@ const WatchSection: React.FC<{ onViewAll: () => void }> = ({ onViewAll }) => {
   }, []);
 
   const getYouTubeId = (url: string) => {
+    if (!url) return null;
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
     const match = url.match(regExp);
     return (match && match[2].length === 11) ? match[2] : null;
@@ -45,6 +46,7 @@ const WatchSection: React.FC<{ onViewAll: () => void }> = ({ onViewAll }) => {
   };
 
   const isDirectVideo = (url: string) => {
+    if (!url) return false;
     const lowerUrl = url.toLowerCase();
     return lowerUrl.endsWith('.mp4') || lowerUrl.endsWith('.webm') || lowerUrl.endsWith('.ogg');
   };
@@ -87,22 +89,18 @@ const WatchSection: React.FC<{ onViewAll: () => void }> = ({ onViewAll }) => {
             <div className="p-8 md:p-12 space-y-6 max-h-[40vh] overflow-y-auto custom-scrollbar bg-gradient-to-b from-card-dark to-black">
               <div className="flex flex-wrap items-center gap-4">
                 <span className="bg-primary text-white font-black uppercase text-[10px] px-4 py-1.5 rounded-full tracking-widest border border-primary/20 shadow-lg shadow-primary/10">
-                  {selectedVideo.category}
+                  {selectedVideo.category || 'VÍDEO'}
                 </span>
                 <div className="h-px flex-1 bg-white/10"></div>
               </div>
               
-              <h3 className="text-3xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none">
+              <h3 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-none">
                 {selectedVideo.title}
               </h3>
               
-              {selectedVideo.description ? (
-                <p className="text-white/50 text-base md:text-xl font-light leading-relaxed max-w-4xl">
-                  {selectedVideo.description}
-                </p>
-              ) : (
-                <p className="text-white/20 text-sm font-black uppercase tracking-widest italic">Sem descrição disponível para este conteúdo.</p>
-              )}
+              <p className="text-white/50 text-base md:text-xl font-light leading-relaxed max-w-4xl">
+                {selectedVideo.description || 'Sem descrição adicional para este conteúdo.'}
+              </p>
             </div>
           </div>
         </div>
