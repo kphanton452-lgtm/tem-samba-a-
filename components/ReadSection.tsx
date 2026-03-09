@@ -55,7 +55,8 @@ const ReadSection: React.FC<ReadSectionProps> = ({ onViewAll }) => {
                 </div>
               </div>
             </article>
-          ))}
+          ))
+        )}
       </div>
     </section>
   );
