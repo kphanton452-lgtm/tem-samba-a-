@@ -17,6 +17,7 @@ export interface VideoData {
   category: string;
   thumbnail: string;
   video_url: string;
+  image_url?: string;
   description?: string;
   duration?: string;
 }
